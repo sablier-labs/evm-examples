@@ -28,7 +28,7 @@ contract StreamManagementWithHookTest is Test {
     address internal sablierAdmin;
 
     function setUp() public {
-        vm.createSelectFork("mainnet");
+        vm.createSelectFork("ethereum");
 
         // Create a test users
         alice = makeAddr("Alice");
