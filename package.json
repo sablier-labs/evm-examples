@@ -1,5 +1,5 @@
 {
-  "name": "examples",
+  "name": "evm-examples",
   "description": "Solidity examples for on-chain interaction with Sablier Protocols",
   "version": "1.0.0",
   "author": {
