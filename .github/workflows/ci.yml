@@ -1,8 +1,8 @@
 name: "CI"
 
-env:
-  MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
-  FOUNDRY_PROFILE: "ci"
+concurrency:
+  cancel-in-progress: true
+  group: ${{github.workflow}}-${{github.ref}}
 
 on:
   workflow_dispatch:
@@ -10,77 +10,53 @@ on:
   push:
     branches:
       - "main"
+      - "staging"
 
 jobs:
-  lint:
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Check out the repo"
-        uses: "actions/checkout@v4"
+  check:
+    uses: "sablier-labs/gha-utils/.github/workflows/full-check.yml@main"
 
-      - name: "Install Foundry"
-        uses: "foundry-rs/foundry-toolchain@v1"
+  build-airdrops:
+    uses: "sablier-labs/gha-utils/.github/workflows/forge-build.yml@main"
+    with:
+      foundry-profiles: |
+        airdrops
 
-      - name: "Install Bun"
-        uses: "oven-sh/setup-bun@v1"
+  test-airdrops:
+    needs: ["check", "build-airdrops"]
+    if: needs.build-airdrops.outputs.cache-status != 'primary'
+    uses: "sablier-labs/gha-utils/.github/workflows/forge-test.yml@main"
+    with:
+      foundry-profile: "airdrops"
+      match-path: "airdrops/**/*.sol"
+      name: "Airdrops tests"
 
-      - name: "Install the Node.js dependencies"
-        run: "bun install"
+  build-flow:
+    uses: "sablier-labs/gha-utils/.github/workflows/forge-build.yml@main"
+    with:
+      foundry-profiles: |
+        flow
 
-      - name: "Lint the code"
-        run: "bun run lint"
+  test-flow:
+    needs: ["check", "build-flow"]
+    if: needs.build-flow.outputs.cache-status != 'primary'
+    uses: "sablier-labs/gha-utils/.github/workflows/forge-test.yml@main"
+    with:
+      foundry-profile: "flow"
+      match-path: "flow/**/*.sol"
+      name: "Flow tests"
 
-      - name: "Add lint summary"
-        run: |
-          echo "## Lint result" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
+  build-lockup:
+    uses: "sablier-labs/gha-utils/.github/workflows/forge-build.yml@main"
+    with:
+      foundry-profiles: |
+        lockup
 
-  build:
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Check out the repo"
-        uses: "actions/checkout@v4"
-
-      - name: "Install Foundry"
-        uses: "foundry-rs/foundry-toolchain@v1"
-
-      - name: "Install Bun"
-        uses: "oven-sh/setup-bun@v1"
-
-      - name: "Install the Node.js dependencies"
-        run: "bun install"
-
-      - name: "Build the contracts"
-        run: "bun run build"
-
-      - name: "Add build summary"
-        run: |
-          echo "## Build result" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
-
-  test:
-    needs: ["lint", "build"]
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: "Check out the repo"
-        uses: "actions/checkout@v4"
-
-      - name: "Install Foundry"
-        uses: "foundry-rs/foundry-toolchain@v1"
-
-      - name: "Install Bun"
-        uses: "oven-sh/setup-bun@v1"
-
-      - name: "Install the Node.js dependencies"
-        run: "bun install"
-
-      - name: "Show the Foundry config"
-        run: "forge config"
-
-      - name: "Run the tests"
-        run: "bun run test"
-
-      - name: "Add test summary"
-        run: |
-          echo "## Tests result" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Passed" >> $GITHUB_STEP_SUMMARY
+  test-lockup:
+    needs: ["check", "build-lockup"]
+    if: needs.build-lockup.outputs.cache-status != 'primary'
+    uses: "sablier-labs/gha-utils/.github/workflows/forge-test.yml@main"
+    with:
+      foundry-profile: "lockup"
+      match-path: "lockup/**/*.sol"
+      name: "Lockup tests"
