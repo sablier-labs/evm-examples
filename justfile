@@ -3,6 +3,7 @@
 import "./node_modules/@sablier/devkit/just/evm.just"
 
 # Override constants for this project structure
+GLOBS_PRETTIER := "**/*.{md,yml}"
 GLOBS_SOLIDITY := "{airdrops,flow,lockup}/**/*.sol"
 
 default:
