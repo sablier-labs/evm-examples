@@ -3,7 +3,6 @@ pragma solidity >=0.8.22;
 
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { ISablierLockup } from "@sablier/lockup/src/interfaces/ISablierLockup.sol";
-import { ILockupNFTDescriptor } from "@sablier/lockup/src/interfaces/ILockupNFTDescriptor.sol";
 import { SablierLockup } from "@sablier/lockup/src/SablierLockup.sol";
 
 import { Test } from "forge-std/src/Test.sol";
@@ -25,7 +24,7 @@ contract StreamManagementWithHookTest is Test {
 
     address internal alice;
     address internal bob;
-    address internal sablierAdmin;
+    address internal comptroller;
 
     function setUp() public {
         vm.createSelectFork("ethereum");
@@ -33,23 +32,22 @@ contract StreamManagementWithHookTest is Test {
         // Create a test users
         alice = makeAddr("Alice");
         bob = makeAddr("Bob");
-        sablierAdmin = payable(makeAddr("SablierAdmin"));
+        comptroller = 0x0000008ABbFf7a84a2fE09f9A9b74D3BC2072399;
 
         // Create a mock ERC20 token and send 1M tokens to Bob
         token = new MockERC20(bob);
 
-        // Deploy Sablier Lockup Linear contract
+        // Deploy Sablier Lockup contract
         sablierLockup = new SablierLockup(
-            sablierAdmin,
-            ILockupNFTDescriptor(address(0)), // Irrelevant for test purposes
-            500 // the MAX_COUNT
+            comptroller,
+            address(0) // Irrelevant for test purposes
         );
 
         // Deploy StreamManagementWithHook contract
         streamManager = new StreamManagementWithHook(sablierLockup, token);
 
         // Whitelist the contract to be able to hook into Sablier Lockup contract
-        vm.startPrank(sablierAdmin);
+        vm.startPrank(comptroller);
         sablierLockup.allowToHook(address(streamManager));
         vm.stopPrank();
 
@@ -61,7 +59,7 @@ contract StreamManagementWithHookTest is Test {
     // Test creating a stream from Bob (Stream Manager Owner) to Alice (Beneficiary)
     function test_Create() public {
         // Create a stream with Alice as the beneficiary
-        uint256 streamId = streamManager.create({ beneficiary: alice, totalAmount: amount });
+        uint256 streamId = streamManager.create({ beneficiary: alice, depositAmount: amount });
 
         // Check streamId
         assertEq(streamId, 1);
@@ -84,7 +82,7 @@ contract StreamManagementWithHookTest is Test {
 
     modifier givenStreamsCreated() {
         // Create a stream with Alice as the beneficiary
-        defaultStreamId = streamManager.create({ beneficiary: alice, totalAmount: amount });
+        defaultStreamId = streamManager.create({ beneficiary: alice, depositAmount: amount });
         require(defaultStreamId == 1, "Stream creation failed");
         _;
     }

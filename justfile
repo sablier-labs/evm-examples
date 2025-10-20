@@ -52,11 +52,11 @@ test-lockup:
 # Override formatting and checking commands for project-specific paths
 # Run all code checks on airdrops, flow, lockup
 [group("format")]
-full-check globs=GLOBS_SOLIDITY: (solhint-check globs) (fmt-check) (prettier-check globs)
+full-check: (solhint-check GLOBS_SOLIDITY) fmt-check (prettier-check GLOBS_PRETTIER)
 
 # Run all code fixes on airdrops, flow, lockup
 [group("format")]
-full-write globs=GLOBS_SOLIDITY: (solhint-write globs) (fmt-write) (prettier-write globs)
+full-write: (solhint-write GLOBS_SOLIDITY) fmt-write (prettier-write GLOBS_PRETTIER)
 
 # Check code with Forge formatter for airdrops, flow, lockup
 [group("format")]

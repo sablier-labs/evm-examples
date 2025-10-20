@@ -4,10 +4,9 @@ pragma solidity >=0.8.22;
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { IERC165 } from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
-import { ud60x18 } from "@prb/math/src/UD60x18.sol";
 import { ISablierLockupRecipient } from "@sablier/lockup/src/interfaces/ISablierLockupRecipient.sol";
 import { ISablierLockup } from "@sablier/lockup/src/interfaces/ISablierLockup.sol";
-import { Broker, Lockup, LockupLinear } from "@sablier/lockup/src/types/DataTypes.sol";
+import { Lockup, LockupLinear } from "@sablier/lockup/src/types/DataTypes.sol";
 
 /// @notice Example of creating Sablier streams and managing them on behalf of users with some withdrawal restrictions
 /// powered by Sablier hooks.
@@ -47,17 +46,17 @@ contract StreamManagementWithHook is ISablierLockupRecipient {
     /// @dev The stream recipient is set to `this` contract to have control over "withdraw" from streams. Actual
     /// recipient is managed via `streamBeneficiaries` mapping.
     /// @param beneficiary The ultimate recipient of the stream's token.
-    /// @param totalAmount The total amount of tokens to be streamed.
+    /// @param depositAmount The total amount of tokens to be streamed.
     /// @return streamId The stream Id.
-    function create(address beneficiary, uint128 totalAmount) external returns (uint256 streamId) {
+    function create(address beneficiary, uint128 depositAmount) external returns (uint256 streamId) {
         // Check: verify that this contract is allowed to hook into Sablier Lockup.
         if (!SABLIER.isAllowedToHook(address(this))) {
             revert Unauthorized();
         }
 
         // Transfer tokens to this contract and approve Sablier to spend them.
-        TOKEN.transferFrom(msg.sender, address(this), totalAmount);
-        TOKEN.approve(address(SABLIER), totalAmount);
+        TOKEN.transferFrom(msg.sender, address(this), depositAmount);
+        TOKEN.approve(address(SABLIER), depositAmount);
 
         Lockup.CreateWithDurations memory params;
         params.transferable = false;
@@ -66,9 +65,8 @@ contract StreamManagementWithHook is ISablierLockupRecipient {
         params.recipient = address(this);
         // Set `this` as the sender of the Stream. Only `this` will be able to call the "cancel" function
         params.sender = address(this);
-        params.totalAmount = totalAmount;
+        params.depositAmount = depositAmount;
         params.token = TOKEN;
-        params.broker = Broker(address(0), ud60x18(0)); // No broker fee
 
         LockupLinear.UnlockAmounts memory unlockAmounts = LockupLinear.UnlockAmounts({ start: 0, cliff: 0 });
         LockupLinear.Durations memory durations = LockupLinear.Durations({

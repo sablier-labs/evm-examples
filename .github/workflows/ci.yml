@@ -24,6 +24,8 @@ jobs:
   test-airdrops:
     needs: ["check", "build-airdrops"]
     if: needs.build-airdrops.outputs.cache-status != 'primary'
+    secrets:
+      ROUTEMESH_API_KEY: ${{ secrets.ROUTEMESH_API_KEY }}
     uses: "sablier-labs/gha-utils/.github/workflows/forge-test.yml@main"
     with:
       foundry-profile: "airdrops"
@@ -38,6 +40,8 @@ jobs:
   test-flow:
     needs: ["check", "build-flow"]
     if: needs.build-flow.outputs.cache-status != 'primary'
+    secrets:
+      ROUTEMESH_API_KEY: ${{ secrets.ROUTEMESH_API_KEY }}
     uses: "sablier-labs/gha-utils/.github/workflows/forge-test.yml@main"
     with:
       foundry-profile: "flow"
@@ -52,6 +56,8 @@ jobs:
   test-lockup:
     needs: ["check", "build-lockup"]
     if: needs.build-lockup.outputs.cache-status != 'primary'
+    secrets:
+      ROUTEMESH_API_KEY: ${{ secrets.ROUTEMESH_API_KEY }}
     uses: "sablier-labs/gha-utils/.github/workflows/forge-test.yml@main"
     with:
       foundry-profile: "lockup"

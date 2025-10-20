@@ -18,12 +18,12 @@ contract StreamManagement {
 
     // This function can be called by the sender, recipient, or an approved NFT operator
     function withdraw(uint256 streamId) external {
-        sablier.withdraw({ streamId: streamId, to: address(0xcafe), amount: 1337e18 });
+        sablier.withdraw({ streamId: streamId, to: address(0xCAFE), amount: 1337e18 });
     }
 
     // This function can be called by the sender, recipient, or an approved NFT operator
     function withdrawMax(uint256 streamId) external {
-        sablier.withdrawMax({ streamId: streamId, to: address(0xcafe) });
+        sablier.withdrawMax({ streamId: streamId, to: address(0xCAFE) });
     }
 
     // This function can be called by either the recipient or an approved NFT operator
@@ -60,16 +60,16 @@ contract StreamManagement {
 
     // This function can be called by either the recipient or an approved NFT operator
     function safeTransferFrom(uint256 streamId) external {
-        sablier.safeTransferFrom({ from: address(this), to: address(0xcafe), tokenId: streamId });
+        sablier.safeTransferFrom({ from: address(this), to: address(0xCAFE), tokenId: streamId });
     }
 
     // This function can be called by either the recipient or an approved NFT operator
     function transferFrom(uint256 streamId) external {
-        sablier.transferFrom({ from: address(this), to: address(0xcafe), tokenId: streamId });
+        sablier.transferFrom({ from: address(this), to: address(0xCAFE), tokenId: streamId });
     }
 
     // This function can be called only by the recipient
     function withdrawMaxAndTransfer(uint256 streamId) external {
-        sablier.withdrawMaxAndTransfer({ streamId: streamId, newRecipient: address(0xcafe) });
+        sablier.withdrawMaxAndTransfer({ streamId: streamId, newRecipient: address(0xCAFE) });
     }
 }

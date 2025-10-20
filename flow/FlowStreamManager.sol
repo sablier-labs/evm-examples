@@ -2,35 +2,22 @@
 pragma solidity >=0.8.22;
 
 import { ud21x18 } from "@prb/math/src/UD21x18.sol";
-import { ud60x18 } from "@prb/math/src/UD60x18.sol";
-import { Broker, ISablierFlow } from "@sablier/flow/src/interfaces/ISablierFlow.sol";
+import { ISablierFlow } from "@sablier/flow/src/interfaces/ISablierFlow.sol";
 
 contract FlowStreamManager {
     // Mainnet address
-    ISablierFlow public constant FLOW = ISablierFlow(0x3DF2AAEdE81D2F6b261F79047517713B8E844E04);
+    ISablierFlow public constant FLOW = ISablierFlow(0x7a86d3e6894f9c5B5f25FFBDAaE658CFc7569623);
 
     function adjustRatePerSecond(uint256 streamId) external {
         FLOW.adjustRatePerSecond({ streamId: streamId, newRatePerSecond: ud21x18(0.0001e18) });
     }
 
     function deposit(uint256 streamId) external {
-        FLOW.deposit(streamId, 3.14159e18, msg.sender, address(0xCAFE));
+        FLOW.deposit({ streamId: streamId, amount: 3.14159e18, sender: msg.sender, recipient: address(0xCAFE) });
     }
 
     function depositAndPause(uint256 streamId) external {
         FLOW.depositAndPause(streamId, 3.14159e18);
-    }
-
-    function depositViaBroker(uint256 streamId) external {
-        Broker memory broker = Broker({ account: address(0xDEAD), fee: ud60x18(0.0001e18) });
-
-        FLOW.depositViaBroker({
-            streamId: streamId,
-            totalAmount: 3.14159e18,
-            sender: msg.sender,
-            recipient: address(0xCAFE),
-            broker: broker
-        });
     }
 
     function pause(uint256 streamId) external {

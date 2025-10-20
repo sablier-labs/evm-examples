@@ -3,9 +3,8 @@ pragma solidity >=0.8.22;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { ud2x18 } from "@prb/math/src/UD2x18.sol";
-import { ud60x18 } from "@prb/math/src/UD60x18.sol";
 import { ISablierLockup } from "@sablier/lockup/src/interfaces/ISablierLockup.sol";
-import { Broker, Lockup, LockupDynamic } from "@sablier/lockup/src/types/DataTypes.sol";
+import { Lockup, LockupDynamic } from "@sablier/lockup/src/types/DataTypes.sol";
 
 /// @notice Example of how to create a Lockup Dynamic stream.
 /// @dev This code is referenced in the docs:
@@ -13,18 +12,18 @@ import { Broker, Lockup, LockupDynamic } from "@sablier/lockup/src/types/DataTyp
 contract LockupDynamicStreamCreator {
     // Mainnet addresses
     IERC20 public constant DAI = IERC20(0x6B175474E89094C44Da98b954EedeAC495271d0F);
-    ISablierLockup public constant LOCKUP = ISablierLockup(0x7C01AA3783577E15fD7e272443D44B92d5b21056);
+    ISablierLockup public constant LOCKUP = ISablierLockup(0xcF8ce57fa442ba50aCbC57147a62aD03873FfA73);
 
     /// @dev For this function to work, the sender must have approved this dummy contract to spend DAI.
     function createStream(uint128 amount0, uint128 amount1) public returns (uint256 streamId) {
         // Sum the segment amounts
-        uint256 totalAmount = amount0 + amount1;
+        uint128 depositAmount = amount0 + amount1;
 
         // Transfer the provided amount of DAI tokens to this contract
-        DAI.transferFrom(msg.sender, address(this), totalAmount);
+        DAI.transferFrom(msg.sender, address(this), depositAmount);
 
         // Approve the Sablier contract to spend DAI
-        DAI.approve(address(LOCKUP), totalAmount);
+        DAI.approve(address(LOCKUP), depositAmount);
 
         // Declare the params struct
         Lockup.CreateWithTimestamps memory params;
@@ -32,7 +31,7 @@ contract LockupDynamicStreamCreator {
         // Declare the function parameters
         params.sender = msg.sender; // The sender will be able to cancel the stream
         params.recipient = address(0xCAFE); // The recipient of the streamed tokens
-        params.totalAmount = uint128(totalAmount); // Total amount is the amount inclusive of all fees
+        params.depositAmount = depositAmount; // The deposit amount into the stream
         params.token = DAI; // The streaming token
         params.cancelable = true; // Whether the stream will be cancelable or not
         params.transferable = true; // Whether the stream will be transferable or not
@@ -53,8 +52,6 @@ contract LockupDynamicStreamCreator {
                 timestamp: uint40(block.timestamp + 52 weeks)
             })
         );
-
-        params.broker = Broker(address(0), ud60x18(0)); // Optional parameter left undefined
 
         // Create the LockupDynamic stream
         streamId = LOCKUP.createWithTimestampsLD(params, segments);
