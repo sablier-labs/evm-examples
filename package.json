@@ -26,21 +26,30 @@
   },
   "homepage": "https://github.com/sablier-labs/examples#readme",
   "keywords": [
-    "asset-streaming",
     "blockchain",
     "cryptoasset-streaming",
     "cryptoassets",
     "ethereum",
+    "evm",
     "foundry",
     "money-streaming",
     "real-time-finance",
     "sablier",
-    "sablier-v2",
+    "sablier-airdrops",
+    "sablier-flow",
+    "sablier-lockup",
     "smart-contracts",
     "solidity",
-    "token-streaming"
+    "token-distribution",
+    "token-streaming",
+    "token-vesting",
+    "vesting",
+    "web3"
   ],
   "license": "GPL-3.0-or-later",
   "private": true,
-  "repository": "github.com:sablier-labs/examples"
+  "repository": "github.com:sablier-labs/examples",
+  "scripts": {
+    "prepare": "husky"
+  }
 }
