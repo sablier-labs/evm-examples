@@ -1,6 +1,7 @@
-# Sablier Examples
+# Sablier EVM Examples
 
-This repository contains example integrations with the Sablier Protocol. More detailed guides walking through the logic of the examples can be found on the [Sablier docs](https://docs.sablier.com) website.
+This repository contains example integrations with the Sablier Protocol. More detailed guides walking through the logic
+of the examples can be found on the [Sablier docs](https://docs.sablier.com) website.
 
 ## Disclaimer
 
@@ -10,7 +11,8 @@ environment. It makes specific assumptions that may not apply to your particular
 
 ## Contributing
 
-Make sure you have [Foundry](https://github.com/foundry-rs/foundry) installed, and that you have it configured correctly in [VSCode](https://book.getfoundry.sh/config/vscode).
+Make sure you have [Foundry](https://github.com/foundry-rs/foundry) installed, and that you have it configured correctly
+in [VSCode](https://book.getfoundry.sh/config/vscode).
 
 ## License
 

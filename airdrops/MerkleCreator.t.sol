@@ -16,7 +16,7 @@ contract MerkleCreatorTest is Test {
 
     function setUp() public {
         // Fork Ethereum Mainnet
-        vm.createSelectFork("mainnet");
+        vm.createSelectFork("ethereum");
 
         // Deploy the Merkle creator
         merkleCreator = new MerkleCreator();

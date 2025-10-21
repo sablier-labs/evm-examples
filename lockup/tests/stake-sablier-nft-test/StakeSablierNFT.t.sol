@@ -66,7 +66,7 @@ abstract contract StakeSablierNFT_Fork_Test is Test {
 
     function setUp() public {
         // Fork Ethereum Mainnet
-        vm.createSelectFork("mainnet");
+        vm.createSelectFork("ethereum");
 
         // Create users.
         users.admin = makeAddr("admin");

@@ -1,5 +1,5 @@
 {
-  "name": "examples",
+  "name": "evm-examples",
   "description": "Solidity examples for on-chain interaction with Sablier Protocols",
   "version": "1.0.0",
   "author": {
@@ -7,52 +7,49 @@
     "url": "https://sablier.com"
   },
   "bugs": {
-    "url": "https://github.com/sablier-labs/examples/issues"
+    "url": "https://github.com/sablier-labs/evm-examples/issues"
   },
   "devDependencies": {
-    "forge-std": "github:foundry-rs/forge-std#v1.8.1",
-    "prettier": "^2.8.8",
-    "solhint": "^5.0.3"
+    "@sablier/devkit": "github:sablier-labs/devkit",
+    "forge-std": "github:foundry-rs/forge-std#v1.10.0",
+    "husky": "^9.1",
+    "lint-staged": "^16.1",
+    "prettier": "^3.5",
+    "solhint": "^6.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "5.0.2",
+    "@openzeppelin/contracts": "5.3.0",
     "@prb/math": "4.1.0",
-    "@sablier/airdrops": "1.3.0",
-    "@sablier/flow": "1.1.0",
-    "@sablier/lockup": "2.0.0"
+    "@sablier/airdrops": "2.0.1",
+    "@sablier/flow": "2.0.0",
+    "@sablier/lockup": "3.0.1"
   },
-  "homepage": "https://github.com/sablier-labs/examples#readme",
+  "homepage": "https://github.com/sablier-labs/evm-examples#readme",
   "keywords": [
-    "asset-streaming",
     "blockchain",
     "cryptoasset-streaming",
     "cryptoassets",
     "ethereum",
+    "evm",
     "foundry",
     "money-streaming",
     "real-time-finance",
     "sablier",
-    "sablier-v2",
+    "sablier-airdrops",
+    "sablier-flow",
+    "sablier-lockup",
     "smart-contracts",
     "solidity",
-    "token-streaming"
+    "token-distribution",
+    "token-streaming",
+    "token-vesting",
+    "vesting",
+    "web3"
   ],
   "license": "GPL-3.0-or-later",
   "private": true,
-  "repository": "github.com:sablier-labs/examples",
+  "repository": "github.com:sablier-labs/evm-examples",
   "scripts": {
-    "build": "bun run build:airdrops && bun run build:flow && bun run build:lockup",
-    "build:airdrops": "FOUNDRY_PROFILE=airdrops forge build",
-    "build:flow": "FOUNDRY_PROFILE=flow forge build",
-    "build:lockup": "FOUNDRY_PROFILE=lockup forge build",
-    "clean": "rm -rf cache out",
-    "lint": "bun run lint:sol && bun run prettier:check",
-    "lint:sol": "forge fmt . && bun solhint \"{airdrops,flow,lockup}/**/*.sol\"",
-    "prettier:check": "prettier --check \"**/*.{md,yml}\"",
-    "prettier:write": "prettier --write \"**/*.{md,yml}\"",
-    "test": "bun run test:airdrops && bun run test:flow && bun run test:lockup",
-    "test:airdrops": "FOUNDRY_PROFILE=airdrops forge test",
-    "test:flow": "FOUNDRY_PROFILE=flow forge test",
-    "test:lockup": "FOUNDRY_PROFILE=lockup forge test"
+    "prepare": "husky"
   }
 }
