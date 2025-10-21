@@ -7,7 +7,7 @@
     "url": "https://sablier.com"
   },
   "bugs": {
-    "url": "https://github.com/sablier-labs/examples/issues"
+    "url": "https://github.com/sablier-labs/evm-examples/issues"
   },
   "devDependencies": {
     "@sablier/devkit": "github:sablier-labs/devkit",
@@ -24,7 +24,7 @@
     "@sablier/flow": "2.0.0",
     "@sablier/lockup": "3.0.1"
   },
-  "homepage": "https://github.com/sablier-labs/examples#readme",
+  "homepage": "https://github.com/sablier-labs/evm-examples#readme",
   "keywords": [
     "blockchain",
     "cryptoasset-streaming",
@@ -48,7 +48,7 @@
   ],
   "license": "GPL-3.0-or-later",
   "private": true,
-  "repository": "github.com:sablier-labs/examples",
+  "repository": "github.com:sablier-labs/evm-examples",
   "scripts": {
     "prepare": "husky"
   }

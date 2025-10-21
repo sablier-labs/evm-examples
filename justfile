@@ -11,10 +11,7 @@ default:
 
 # Build all contracts (airdrops, flow, lockup)
 [group("build")]
-build:
-  just build-airdrops
-  just build-flow
-  just build-lockup
+build: build-airdrops build-flow build-lockup
 alias ba := build
 
 # Build airdrops contracts
@@ -34,10 +31,7 @@ build-lockup:
 
 # Test all contracts (airdrops, flow, lockup)
 [group("test")]
-test:
-  just test-airdrops
-  just test-flow
-  just test-lockup
+test: test-airdrops test-flow test-lockup
 alias ta := test
 
 # Test airdrops contracts
@@ -58,17 +52,11 @@ test-lockup:
 # Override formatting and checking commands for project-specific paths
 # Run all code checks on airdrops, flow, lockup
 [group("format")]
-full-check:
-  just solhint-check
-  just fmt-check
-  just prettier-check
+full-check globs=GLOBS_SOLIDITY: (solhint-check globs) (fmt-check) (prettier-check globs)
 
 # Run all code fixes on airdrops, flow, lockup
 [group("format")]
-full-write:
-  just solhint-write
-  just fmt-write
-  just prettier-write
+full-write globs=GLOBS_SOLIDITY: (solhint-write globs) (fmt-write) (prettier-write globs)
 
 # Check code with Forge formatter for airdrops, flow, lockup
 [group("format")]

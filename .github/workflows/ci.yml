@@ -19,8 +19,7 @@ jobs:
   build-airdrops:
     uses: "sablier-labs/gha-utils/.github/workflows/forge-build.yml@main"
     with:
-      foundry-profiles: |
-        airdrops
+      foundry-profiles: airdrops
 
   test-airdrops:
     needs: ["check", "build-airdrops"]
@@ -34,8 +33,7 @@ jobs:
   build-flow:
     uses: "sablier-labs/gha-utils/.github/workflows/forge-build.yml@main"
     with:
-      foundry-profiles: |
-        flow
+      foundry-profiles: flow
 
   test-flow:
     needs: ["check", "build-flow"]
@@ -49,8 +47,7 @@ jobs:
   build-lockup:
     uses: "sablier-labs/gha-utils/.github/workflows/forge-build.yml@main"
     with:
-      foundry-profiles: |
-        lockup
+      foundry-profiles: lockup
 
   test-lockup:
     needs: ["check", "build-lockup"]
