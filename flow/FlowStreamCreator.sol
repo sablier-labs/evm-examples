@@ -10,7 +10,7 @@ import { FlowUtilities } from "./FlowUtilities.sol";
 contract FlowStreamCreator {
     // Mainnet addresses
     IERC20 public constant USDC = IERC20(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48);
-    ISablierFlow public constant FLOW = ISablierFlow(0x3DF2AAEdE81D2F6b261F79047517713B8E844E04);
+    ISablierFlow public constant FLOW = ISablierFlow(0x7a86d3e6894f9c5B5f25FFBDAaE658CFc7569623);
 
     // Create a stream that sends 1000 USDC per month.
     function createStream_1K_PerMonth() external returns (uint256 streamId) {
@@ -21,6 +21,7 @@ contract FlowStreamCreator {
             sender: msg.sender, // The sender will be able to manage the stream
             recipient: address(0xCAFE), // The recipient of the streamed tokens
             ratePerSecond: ratePerSecond, // The rate per second equivalent to 1000 USDC per month
+            startTime: uint40(block.timestamp), // The stream starts now
             token: USDC, // The token to be streamed
             transferable: true // Whether the stream will be transferable or not
          });
@@ -35,6 +36,7 @@ contract FlowStreamCreator {
             sender: msg.sender, // The sender will be able to manage the stream
             recipient: address(0xCAFE), // The recipient of the streamed tokens
             ratePerSecond: ratePerSecond, // The rate per second equivalent to 1,000,00 USDC per year
+            startTime: uint40(block.timestamp), // The stream starts now
             token: USDC, // The token to be streamed
             transferable: true // Whether the stream will be transferable or not
          });

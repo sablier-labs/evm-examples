@@ -5,7 +5,7 @@ import { Test } from "forge-std/src/Test.sol";
 
 import { FlowBatchable } from "./FlowBatchable.sol";
 
-contract FlowBatchable_Test is Test {
+contract FlowBatchableTest is Test {
     FlowBatchable internal batchable;
     address internal user;
 
@@ -39,10 +39,10 @@ contract FlowBatchable_Test is Test {
         assertEq(actualStreamIds, expectedStreamIds);
     }
 
-    function test_CreateAndDepositViaBroker() external {
+    function test_CreateAndDeposit() external {
         uint256 nextStreamIdBefore = batchable.FLOW().nextStreamId();
 
-        uint256[] memory actualStreamIds = batchable.createMultipleAndDepositViaBroker();
+        uint256[] memory actualStreamIds = batchable.createMultipleAndDeposit();
         uint256[] memory expectedStreamIds = new uint256[](2);
         expectedStreamIds[0] = nextStreamIdBefore;
         expectedStreamIds[1] = nextStreamIdBefore + 1;

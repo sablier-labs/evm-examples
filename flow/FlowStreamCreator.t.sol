@@ -5,7 +5,7 @@ import { Test } from "forge-std/src/Test.sol";
 
 import { FlowStreamCreator } from "./FlowStreamCreator.sol";
 
-contract FlowStreamCreator_Test is Test {
+contract FlowStreamCreatorTest is Test {
     FlowStreamCreator internal streamCreator;
     address internal user;
 
