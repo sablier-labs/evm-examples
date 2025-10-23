@@ -13,6 +13,7 @@
     "gas-small-strings": "off",
     "gas-strict-inequalities": "off",
     "gas-struct-packing": "off",
+    "immutable-vars-naming": "off",
     "max-line-length": ["error", 128],
     "max-states-count": ["warn", 20],
     "one-contract-per-file": "off",

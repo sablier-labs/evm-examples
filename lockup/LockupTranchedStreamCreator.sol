@@ -3,7 +3,8 @@ pragma solidity >=0.8.22;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { ISablierLockup } from "@sablier/lockup/src/interfaces/ISablierLockup.sol";
-import { Lockup, LockupTranched } from "@sablier/lockup/src/types/DataTypes.sol";
+import { Lockup } from "@sablier/lockup/src/types/Lockup.sol";
+import { LockupTranched } from "@sablier/lockup/src/types/LockupTranched.sol";
 
 /// @notice Example of how to create a Lockup Tranched stream.
 /// @dev This code is referenced in the docs:

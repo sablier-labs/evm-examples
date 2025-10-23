@@ -4,7 +4,8 @@ pragma solidity >=0.8.22;
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { ud2x18 } from "@prb/math/src/UD2x18.sol";
 import { ISablierLockup } from "@sablier/lockup/src/interfaces/ISablierLockup.sol";
-import { Lockup, LockupDynamic } from "@sablier/lockup/src/types/DataTypes.sol";
+import { Lockup } from "@sablier/lockup/src/types/Lockup.sol";
+import { LockupDynamic } from "@sablier/lockup/src/types/LockupDynamic.sol";
 
 /// @notice Example of how to create a Lockup Dynamic stream.
 /// @dev This code is referenced in the docs:

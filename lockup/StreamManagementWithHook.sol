@@ -6,7 +6,8 @@ import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.s
 import { IERC165 } from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import { ISablierLockupRecipient } from "@sablier/lockup/src/interfaces/ISablierLockupRecipient.sol";
 import { ISablierLockup } from "@sablier/lockup/src/interfaces/ISablierLockup.sol";
-import { Lockup, LockupLinear } from "@sablier/lockup/src/types/DataTypes.sol";
+import { Lockup } from "@sablier/lockup/src/types/Lockup.sol";
+import { LockupLinear } from "@sablier/lockup/src/types/LockupLinear.sol";
 
 /// @notice Example of creating Sablier streams and managing them on behalf of users with some withdrawal restrictions
 /// powered by Sablier hooks.

@@ -4,7 +4,8 @@ pragma solidity >=0.8.22;
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { ISablierBatchLockup } from "@sablier/lockup/src/interfaces/ISablierBatchLockup.sol";
 import { ISablierLockup } from "@sablier/lockup/src/interfaces/ISablierLockup.sol";
-import { BatchLockup, LockupTranched } from "@sablier/lockup/src/types/DataTypes.sol";
+import { BatchLockup } from "@sablier/lockup/src/types/BatchLockup.sol";
+import { LockupTranched } from "@sablier/lockup/src/types/LockupTranched.sol";
 
 contract BatchLTStreamCreator {
     // Mainnet addresses
