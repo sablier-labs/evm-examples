@@ -81,7 +81,10 @@ contract StreamManagement {
     }
 
     // This function can be called only by the recipient
-    function withdrawMaxAndTransfer(uint256 streamId) external {
-        sablier.withdrawMaxAndTransfer({ streamId: streamId, newRecipient: address(0xCAFE) });
+    function withdrawMaxAndTransfer(uint256 streamId) external payable {
+        // Calculate the minimum fee to withdraw the amount.
+        uint256 fee = sablier.calculateMinFeeWei(streamId);
+
+        sablier.withdrawMaxAndTransfer{ value: fee }({ streamId: streamId, newRecipient: address(0xCAFE) });
     }
 }

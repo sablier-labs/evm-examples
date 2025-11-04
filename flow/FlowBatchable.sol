@@ -167,6 +167,8 @@ contract FlowBatchable {
             address recipient = FLOW.getRecipient(streamIds[i]);
             calls[i] = abi.encodeCall(FLOW.withdrawMax, (streamIds[i], recipient));
 
+            // Calculate the fee required to withdraw the amount. It is the maximum of the fees required to withdraw
+            // each stream.
             uint256 feeForStreamId = FLOW.calculateMinFeeWei(streamIds[i]);
             if (feeForStreamId > maxFeeRequired) {
                 maxFeeRequired = feeForStreamId;
