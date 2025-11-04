@@ -39,6 +39,7 @@ contract StreamManagementWithHook is ISablierLockupRecipient {
         SABLIER = sablier_;
         TOKEN = token_;
     }
+
     /*//////////////////////////////////////////////////////////////////////////
                                        CREATE
     //////////////////////////////////////////////////////////////////////////*/
@@ -87,15 +88,21 @@ contract StreamManagementWithHook is ISablierLockupRecipient {
     //////////////////////////////////////////////////////////////////////////*/
 
     /// @dev This function can only be called by the stream beneficiary.
-    function withdraw(uint256 streamId, uint128 amount) external onlyStreamBeneficiary(streamId) {
+    function withdraw(uint256 streamId, uint128 amount) external payable onlyStreamBeneficiary(streamId) {
+        // Calculate the fee required to withdraw the amount.
+        uint256 fee = SABLIER.calculateMinFeeWei(streamId);
+
         // Withdraw the specified amount from the stream to the stream beneficiary.
-        SABLIER.withdraw({ streamId: streamId, to: streamBeneficiaries[streamId], amount: amount });
+        SABLIER.withdraw{ value: fee }({ streamId: streamId, to: streamBeneficiaries[streamId], amount: amount });
     }
 
     /// @dev This function can only be called by the stream beneficiary.
-    function withdrawMax(uint256 streamId) external onlyStreamBeneficiary(streamId) {
+    function withdrawMax(uint256 streamId) external payable onlyStreamBeneficiary(streamId) {
+        // Calculate the minimum fee to withdraw the amount.
+        uint256 fee = SABLIER.calculateMinFeeWei(streamId);
+
         // Withdraw the maximum amount from the stream to the stream beneficiary.
-        SABLIER.withdrawMax({ streamId: streamId, to: streamBeneficiaries[streamId] });
+        SABLIER.withdrawMax{ value: fee }({ streamId: streamId, to: streamBeneficiaries[streamId] });
     }
 
     /*//////////////////////////////////////////////////////////////////////////

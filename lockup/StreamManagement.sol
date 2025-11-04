@@ -17,18 +17,30 @@ contract StreamManagement {
     //////////////////////////////////////////////////////////////////////////*/
 
     // This function can be called by the sender, recipient, or an approved NFT operator
-    function withdraw(uint256 streamId) external {
-        sablier.withdraw({ streamId: streamId, to: address(0xCAFE), amount: 1337e18 });
+    function withdraw(uint256 streamId) external payable {
+        uint256 fee = sablier.calculateMinFeeWei(streamId);
+        sablier.withdraw{ value: fee }({ streamId: streamId, to: address(0xCAFE), amount: 1337e18 });
     }
 
     // This function can be called by the sender, recipient, or an approved NFT operator
-    function withdrawMax(uint256 streamId) external {
-        sablier.withdrawMax({ streamId: streamId, to: address(0xCAFE) });
+    function withdrawMax(uint256 streamId) external payable {
+        uint256 fee = sablier.calculateMinFeeWei(streamId);
+        sablier.withdrawMax{ value: fee }({ streamId: streamId, to: address(0xCAFE) });
     }
 
     // This function can be called by either the recipient or an approved NFT operator
-    function withdrawMultiple(uint256[] calldata streamIds, uint128[] calldata amounts) external {
-        sablier.withdrawMultiple({ streamIds: streamIds, amounts: amounts });
+    function withdrawMultiple(uint256[] calldata streamIds, uint128[] calldata amounts) external payable {
+        uint256 maxFeeRequired;
+
+        // The fee required to call withdraw multiple is the maximum of the fees required to withdraw each stream.
+        for (uint256 i = 0; i < streamIds.length; i++) {
+            uint256 feeForStreamId = sablier.calculateMinFeeWei(streamIds[i]);
+            if (feeForStreamId > maxFeeRequired) {
+                maxFeeRequired = feeForStreamId;
+            }
+        }
+
+        sablier.withdrawMultiple{ value: maxFeeRequired }({ streamIds: streamIds, amounts: amounts });
     }
 
     /*//////////////////////////////////////////////////////////////////////////
