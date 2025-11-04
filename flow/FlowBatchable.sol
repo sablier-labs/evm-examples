@@ -127,40 +127,53 @@ contract FlowBatchable {
 
     /// @dev A function to pause a stream and withdraw the maximum available funds.
     /// Note: The streamId's sender must be this contract, otherwise, the call will fail due to no authorization.
-    function pauseAndWithdrawMax(uint256 streamId) external {
+    function pauseAndWithdrawMax(uint256 streamId) external payable {
         // The call data declared as bytes.
         bytes[] memory calls = new bytes[](2);
         calls[0] = abi.encodeCall(FLOW.pause, (streamId));
         calls[1] = abi.encodeCall(FLOW.withdrawMax, (streamId, address(0xCAFE)));
 
+        // Calculate the fee.
+        uint256 fee = FLOW.calculateMinFeeWei(streamId);
+
         // Execute multiple calls in a single transaction using the prepared call data.
-        FLOW.batch(calls);
+        FLOW.batch{ value: fee }(calls);
     }
 
     /// @dev A function to void a stream and withdraw what is left.
     /// Note: The streamId's sender must be this contract, otherwise, the call will fail due to no authorization.
-    function voidAndWithdrawMax(uint256 streamId) external {
+    function voidAndWithdrawMax(uint256 streamId) external payable {
         // The call data declared as bytes
         bytes[] memory calls = new bytes[](2);
         calls[0] = abi.encodeCall(FLOW.void, (streamId));
         calls[1] = abi.encodeCall(FLOW.withdrawMax, (streamId, address(0xCAFE)));
 
+        // Calculate the fee.
+        uint256 fee = FLOW.calculateMinFeeWei(streamId);
+
         // Execute multiple calls in a single transaction using the prepared call data.
-        FLOW.batch(calls);
+        FLOW.batch{ value: fee }(calls);
     }
 
     /// @dev A function to withdraw maximum available funds from multiple streams in a single transaction.
-    function withdrawMaxMultiple(uint256[] calldata streamIds) external {
+    function withdrawMaxMultiple(uint256[] calldata streamIds) external payable {
         uint256 count = streamIds.length;
+
+        uint256 maxFeeRequired;
 
         // Iterate over the streamIds and prepare the call data for each stream.
         bytes[] memory calls = new bytes[](count);
         for (uint256 i = 0; i < count; ++i) {
             address recipient = FLOW.getRecipient(streamIds[i]);
             calls[i] = abi.encodeCall(FLOW.withdrawMax, (streamIds[i], recipient));
+
+            uint256 feeForStreamId = FLOW.calculateMinFeeWei(streamIds[i]);
+            if (feeForStreamId > maxFeeRequired) {
+                maxFeeRequired = feeForStreamId;
+            }
         }
 
         // Execute multiple calls in a single transaction using the prepared call data.
-        FLOW.batch(calls);
+        FLOW.batch{ value: maxFeeRequired }(calls);
     }
 }

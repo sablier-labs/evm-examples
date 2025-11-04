@@ -34,9 +34,9 @@ contract StreamManagement {
 
         // The fee required to call withdraw multiple is the maximum of the fees required to withdraw each stream.
         for (uint256 i = 0; i < streamIds.length; i++) {
-            uint256 feeForStream = sablier.calculateMinFeeWei(streamIds[i]);
-            if (feeForStream > maxFeeRequired) {
-                maxFeeRequired = feeForStream;
+            uint256 feeForStreamId = sablier.calculateMinFeeWei(streamIds[i]);
+            if (feeForStreamId > maxFeeRequired) {
+                maxFeeRequired = feeForStreamId;
             }
         }
 
