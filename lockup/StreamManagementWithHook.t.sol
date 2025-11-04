@@ -3,7 +3,6 @@ pragma solidity >=0.8.22;
 
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { ISablierLockup } from "@sablier/lockup/src/interfaces/ISablierLockup.sol";
-import { SablierLockup } from "@sablier/lockup/src/SablierLockup.sol";
 
 import { Test } from "forge-std/src/Test.sol";
 import { StreamManagementWithHook } from "./StreamManagementWithHook.sol";
@@ -37,11 +36,8 @@ contract StreamManagementWithHookTest is Test {
         // Create a mock ERC20 token and send 1M tokens to Bob
         token = new MockERC20(bob);
 
-        // Deploy Sablier Lockup contract
-        sablierLockup = new SablierLockup(
-            comptroller,
-            address(0) // Irrelevant for test purposes
-        );
+        // Load Sablier Lockup
+        sablierLockup = ISablierLockup(0xcF8ce57fa442ba50aCbC57147a62aD03873FfA73);
 
         // Deploy StreamManagementWithHook contract
         streamManager = new StreamManagementWithHook(sablierLockup, token);
@@ -60,9 +56,6 @@ contract StreamManagementWithHookTest is Test {
     function test_Create() public {
         // Create a stream with Alice as the beneficiary
         uint256 streamId = streamManager.create({ beneficiary: alice, depositAmount: amount });
-
-        // Check streamId
-        assertEq(streamId, 1);
 
         // Check balances
         assertEq(token.balanceOf(alice), 0);
@@ -83,7 +76,6 @@ contract StreamManagementWithHookTest is Test {
     modifier givenStreamsCreated() {
         // Create a stream with Alice as the beneficiary
         defaultStreamId = streamManager.create({ beneficiary: alice, depositAmount: amount });
-        require(defaultStreamId == 1, "Stream creation failed");
         _;
     }
 
@@ -114,7 +106,8 @@ contract StreamManagementWithHookTest is Test {
         assertEq(token.balanceOf(alice), 1e18);
 
         // Withdraw max tokens from the stream
-        streamManager.withdrawMax(defaultStreamId);
+        uint256 fee = sablierLockup.calculateMinFeeWei(defaultStreamId);
+        streamManager.withdrawMax{ value: fee }(defaultStreamId);
 
         assertEq(token.balanceOf(alice), 10e18);
     }

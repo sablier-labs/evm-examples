@@ -48,11 +48,13 @@ contract FlowStreamManager {
         FLOW.void(streamId);
     }
 
-    function withdraw(uint256 streamId) external {
-        FLOW.withdraw({ streamId: streamId, to: address(0xCAFE), amount: 2.71828e18 });
+    function withdraw(uint256 streamId) external payable {
+        uint256 fee = FLOW.calculateMinFeeWei(streamId);
+        FLOW.withdraw{ value: fee }({ streamId: streamId, to: address(0xCAFE), amount: 2.71828e18 });
     }
 
-    function withdrawMax(uint256 streamId) external {
-        FLOW.withdrawMax({ streamId: streamId, to: address(0xCAFE) });
+    function withdrawMax(uint256 streamId) external payable {
+        uint256 fee = FLOW.calculateMinFeeWei(streamId);
+        FLOW.withdrawMax{ value: fee }({ streamId: streamId, to: address(0xCAFE) });
     }
 }
