@@ -47,7 +47,7 @@ contract StreamManagement {
                                      03-CANCEL
     //////////////////////////////////////////////////////////////////////////*/
 
-    // This function can be called by either the sender or the recipient
+    // This function can be called only by the sender
     function cancel(uint256 streamId) external {
         sablier.cancel(streamId);
     }
